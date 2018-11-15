@@ -17,9 +17,9 @@ RUN apt-get install -y \
     git \
     gnupg \
     htop \
-    apt-transport-https \ 
-    wget && \
+    apt-transport-https && \
     apt-get clean
+
 
 # INSTALL ODBC
 # More specifically, the Microsoft driver
@@ -39,8 +39,8 @@ RUN python3 -m pip install pyodbc
 RUN python3 -m pip install pandas
 
 # Build in startup script 
-COPY startup.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/startup.sh
+COPY startup.sh /
+RUN chmod +x /startup.sh
 
-# Run startup script 
-CMD ["/usr/local/bin/startup.sh"]
+# Run startup script on start 
+CMD ["/bin/bash", "./startup.sh"]
