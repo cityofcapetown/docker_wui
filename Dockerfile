@@ -20,22 +20,10 @@ RUN apt-get install -y \
     apt-transport-https && \
     apt-get clean
 
-
-# INSTALL ODBC
-# More specifically, the Microsoft driver
-RUN wget https://packages.microsoft.com/keys/microsoft.asc -O microsoft.asc && \
-  apt-key add microsoft.asc && \
-  wget https://packages.microsoft.com/config/debian/9/prod.list -O prod.list && \
-  cp prod.list /etc/apt/sources.list.d/mssql-release.list && \
-  apt-get update && \
-  ACCEPT_EULA=Y apt-get install -y msodbcsql17 unixodbc-dev
-
 # Installing Python and Python packages
 RUN apt-get -y install python3 python3-pip
 RUN python3 -m pip install --upgrade pip setuptools wheel
 RUN python3 -m pip install minio
-RUN python3 -m pip install pyhdb
-RUN python3 -m pip install pyodbc
 RUN python3 -m pip install pandas
 
 # Build in startup script 
