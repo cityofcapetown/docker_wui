@@ -4,7 +4,7 @@ echo "$(date -Iminutes) Hello from docker_wui!"
 
 # Setting up db-utils
 TIMEOUT=10
-DB_UTILS_GIT="http://172.29.100.53:8580/OPM/db-utils.git"
+DB_UTILS_GIT="https://ds1.capetown.gov.za/ds_gitlab/OPM/db-utils.git"
 DB_UTILS_DIR="/usr/share/nginx/db-utils"
 
 echo "$(date -Iminutes) Trying to get db-utils."
