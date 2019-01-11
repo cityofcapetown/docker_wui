@@ -14,21 +14,22 @@ RUN ln -fs /usr/share/zoneinfo/Africa/Johannesburg /etc/localtime
 RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 RUN apt-get install -y \
-    git \
     gnupg \
     htop \
+    curl \
+    wget \
     apt-transport-https && \
     apt-get clean
 
-# Installing Python and Python packages
-RUN apt-get -y install python3 python3-pip
-RUN python3 -m pip install --upgrade pip setuptools wheel
-RUN python3 -m pip install minio
-RUN python3 -m pip install pandas
-
-# Build in startup script 
+# Build in startup and refresh scripts
 COPY startup.sh /
+COPY refresh.sh /
+
 RUN chmod +x /startup.sh
+RUN chmod +x /refresh.sh
+
+ENV CONTENT_URL ""
+ENV CONTENT_DIR "/usr/share/nginx/html/"
 
 # Run startup script on start 
 CMD ["/bin/bash", "./startup.sh"]
