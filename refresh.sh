@@ -11,7 +11,7 @@ CONTENT_LIST_RAW=$(curl -s "$URL")
 if [[ "$CONTENT_LIST_RAW" == "" ]]; then
   echo "$(date -Iminutes) No content found at '$URL'"
   exit 1
-elif [[ $(echo "$CONTENT_LIST_RAW" | grep "Key") != 0 ]] ; then
+elif [[ $(echo "$CONTENT_LIST_RAW" | grep "Key") == "" ]]; then
   echo "$(date -Iminutes) No Keys found at '$URL'"
   exit 1
 fi
