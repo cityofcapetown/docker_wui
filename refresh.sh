@@ -6,8 +6,7 @@ URL=${1:-$CONTENT_URL}
 DIR=${2:-$CONTENT_DIR}
 
 # Getting the list of keys in this bucket
-CONTENT_LIST_RAW=$(curl -s "\"$URL\"")
-echo curl -s "\"$URL\""
+CONTENT_LIST_RAW=$(curl -s "$URL")
 
 if [[ "$CONTENT_LIST_RAW" == "" ]]; then
   echo "$(date -Iminutes) No content found at '$URL'"
