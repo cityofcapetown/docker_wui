@@ -22,7 +22,7 @@ CONTENT_LIST=$(echo $CONTENT_LIST_RAW | grep -oP '(?<=Key>)[^<]+')
 # Retrieving the contents in the bucket
 for file in $CONTENT_LIST; do
     file_url=$URL/$file
-    wget -q -N $file_url -P $file
+    wget -q -N $file_url -P "$DIR"/"$(dirname $file)"
 done
 
 echo "$(date -Iminutes) Finished refreshing content"
