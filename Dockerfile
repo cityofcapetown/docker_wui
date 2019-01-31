@@ -18,7 +18,9 @@ RUN apt-get install -y \
     htop \
     curl \
     wget \
-    apt-transport-https && \
+    apt-transport-https \
+    libxml-xpath-perl \
+    libxml2-utils && \
     apt-get clean
 
 # Build in startup and refresh scripts

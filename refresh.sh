@@ -1,27 +1,31 @@
 #!/usr/bin/env bash
 
-echo "$(date -Iminutes) Refreshing content"
+echo "$(date -Iseconds) Refreshing content"
 
 URL=${1:-$CONTENT_URL}
 DIR=${2:-$CONTENT_DIR}
 
 # Getting the list of keys in this bucket
-CONTENT_LIST_RAW=$(curl -s "$URL")
+QUERY_URL="$URL"
+while true; do
+    CONTENT_LIST_XML=$(curl -s $QUERY_URL)
+    CONTENT_LIST=$(echo $CONTENT_LIST_XML | xpath -q -e "ListBucketResult/Contents/Key" | grep -oP '(?<=Key>)[^<]+')
 
-if [[ "$CONTENT_LIST_RAW" == "" ]]; then
-  echo "$(date -Iminutes) No content found at '$URL'"
-  exit 1
-elif [[ $(echo "$CONTENT_LIST_RAW" | grep "Key") == "" ]]; then
-  echo "$(date -Iminutes) No Keys found at '$URL'"
-  exit 1
-fi
+    if [[ $? != 0 ]]; then
+        echo "$(date -Iseconds) No more content found at '$URL'"
+        break
+    fi
 
-CONTENT_LIST=$(echo $CONTENT_LIST_RAW | grep -oP '(?<=Key>)[^<]+')
+    # Retrieving the contents in the bucket
+    echo "$(date -Iseconds) Fetching "$(echo "$CONTENT_LIST" | wc -l)" files..."
 
-# Retrieving the contents in the bucket
-for file in $CONTENT_LIST; do
-    file_url=$URL/$file
-    wget -q -N $file_url -P "$DIR"/"$(dirname $file)"
+    for file in $CONTENT_LIST; do
+        file_url=$URL/$file
+        wget -q -N $file_url -P "$DIR"/"$(dirname $file)"
+    done
+
+    NEXT_MARKER=$(echo $CONTENT_LIST_XML | xpath -q -e "ListBucketResult/NextMarker" | grep -oP '(?<=NextMarker>)[^<]+')
+    QUERY_URL=""$URL"?marker=$NEXT_MARKER"
 done
 
-echo "$(date -Iminutes) Finished refreshing content"
+echo "$(date -Iseconds) Finished refreshing content"
