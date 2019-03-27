@@ -23,6 +23,8 @@ RUN apt-get install -y \
     libxml2-utils && \
     apt-get clean
 
+RUN htpasswd -c /etc/
+
 # Build in startup and refresh scripts
 COPY startup.sh /
 COPY refresh.sh /
@@ -32,6 +34,7 @@ RUN chmod +x /refresh.sh
 
 ENV CONTENT_URL ""
 ENV CONTENT_DIR "/usr/share/nginx/html/"
+ENV PASSWD ""
 
 # Run startup script on start 
 CMD ["/bin/bash", "./startup.sh"]
