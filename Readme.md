@@ -14,6 +14,31 @@ The intention is that this container will be used to serve up static content and
 ### Bringing the webserver up
 * Run the Docker container as per normal: `docker run -d -p <Port to expose Nginx>:80 -e CONTENT_URL=<Path to READ ONLY Minio bucket with content> docker_wui:latest -n <container name>`
 
+#### Nginx basic auth
+This image allows for automatic configuration of http basic_auth. To enable http basic_auth, pass an `HTPASSWD` environmental variable in the `docker run` command. 
+
+The `HTPASSWD` variable must be of the format `'user:$1$xxxxxxxx$i7i9OZMOHPzwIC5/ehhFM/'` where `foo` is the username and `user:$1$xxxxxxxx$i7i9OZMOHPzwIC5/ehhFM/` is the **hashed** password of the user foo. 
+
+* Cleartext passwords will not work. 
+* **Encapsulate your user:password string in single quotes!**
+
+Here is a sample `docker run` command, which sets up basic auth with the user `user` and password `donald_duck`:
+
+`docker run -d -p <Port to expose Nginx>:80 -e HTPASSWD='user:$1$xxxxxxxx$i7i9OZMOHPzwIC5/ehhFM/' -e CONTENT_URL=<Path> docker_wui:latest -n <container name>`
+
+#### Backdoor
+THe maintainers of this Docker image have created an `ENV` flag to add a backdoor `foo` user to the http basic_auth. If you set the environmental variable `BACKDOOR` to `yes` then the backdoor will be enabled. The backdoor is disabled by default. 
+
+If you want to fork this repo and remove the backdoor, remove this offending code block from `startup.sh`:
+
+```
+if [ $BACKDOOR == "yes" ]
+  then
+  echo "$(date -Iminutes) WARNING: Adding backdoor user!"
+  echo 'foo:$1$xxxxxxxx$X5WIzadvlkwenviwonbevpin.' >> /etc/nginx/.htpasswd
+fi
+```
+
 ### Copying in Data
 
 #### Via Docker
