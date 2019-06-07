@@ -20,6 +20,7 @@ This image allows for automatic configuration of http basic_auth. To enable http
 The `HTPASSWD` variable must be of the format `'user:$1$xxxxxxxx$i7i9OZMOHPzwIC5/ehhFM/'` where `foo` is the username and `$1$xxxxxxxx$i7i9OZMOHPzwIC5/ehhFM/` is the **hashed** password of the user foo. 
 
 * Cleartext passwords will not work. 
+* Hint to create a hashed password - `openssl passwd -1 -salt xxxxxxxx <PASSWORD>`
 * **Encapsulate your user:password string in single quotes!**
 
 Here is a sample `docker run` command, which sets up basic auth with the user `user` and password `donald_duck`:
