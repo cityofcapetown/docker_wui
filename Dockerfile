@@ -20,7 +20,8 @@ RUN apt-get install -y \
     wget \
     apt-transport-https \
     libxml-xpath-perl \
-    libxml2-utils && \
+    libxml2-utils \ 
+    unzip && \
     apt-get clean
 
 # Build in startup and refresh scripts
